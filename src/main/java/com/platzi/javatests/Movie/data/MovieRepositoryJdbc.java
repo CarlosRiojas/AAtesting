@@ -2,10 +2,9 @@ package com.platzi.javatests.Movie.data;
 
 import com.platzi.javatests.Movie.model.Genre;
 import com.platzi.javatests.Movie.model.Movie;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
-import javax.swing.tree.RowMapper;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collection;
 
 public class MovieRepositoryJdbc implements MovieRepository {
@@ -18,7 +17,10 @@ public class MovieRepositoryJdbc implements MovieRepository {
 
     @Override
     public Movie findById(long id) {
-        return null;
+        Object[] args = { id };
+
+        return jdbcTemplate.queryForObject("select * from movies where id= ?",args, movieMapper);
+
     }
 
     @Override
@@ -27,24 +29,20 @@ public class MovieRepositoryJdbc implements MovieRepository {
 
         return jdbcTemplate.query("select * from movies", movieMapper);
 
-
-
-
     }
 
     @Override
     public void saveOrUpdate(Movie movie) {
-
+        jdbcTemplate.update("insert into movies (name, minutes, genre) values (?, ?, ?)",
+                movie.getName(), movie.getMinutes(), movie.getGenre().toString());
     }
 
-    private static RowMapper<Movie> movieMapper = new RowMapper() {
-        @Override
-        public Movie MapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Movie(rs.getInt("id"),
-                    rs.getInt("name"),
+    private static RowMapper<Movie> movieMapper = (rs, rowNum) ->
+           new Movie(
+                   rs.getInt("id"),
+                    rs.getString("name"),
                     rs.getInt("minutes"),
-                    rs.getString("genre");
+                    rs.getString("genre"),
             Genre.valueOf(rs.getString("genre")));
-        }
-    };
+
 }

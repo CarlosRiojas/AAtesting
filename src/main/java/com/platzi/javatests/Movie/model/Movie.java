@@ -6,7 +6,7 @@ public class Movie {
     private int minutes;
     private Genre genre;
 
-    public Movie(String name, int minutes, Genre genre){
+    public Movie(int id, String name, int minutes, String string, Genre genre){
         this(null, name,minutes,genre);//llama al segundo constructor cuando no se llama al id se llama al id Null
     }
 
