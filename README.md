@@ -1,4 +1,4 @@
-# AAtesting
+# AAtesting with Mockito and Junit
 
 ## What did I learned in this course?
  I used Junit to create blackbox tests,Used Mockito to create Unit tests and watch them
